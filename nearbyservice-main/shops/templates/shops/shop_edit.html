@@ -1,0 +1,61 @@
+{% extends 'shops/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="col-10 col-md-5 m-auto">
+  <h2 class="form_heading">New Service centre/ Repair Store</h2>
+  <form method="POST" class="post-form" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form|crispy }}
+
+      <div class="row">
+        <div class="col-5 col-md-6">
+          <strong>**Image with aadhar,Upload a pic in this pose with your aadhar card in Hand</strong>
+        </div>
+        <div class="col-5 col-md-6 mb-auto">
+          <!-- <img src="../../../media/aadhar/woman-holding-identification-card-CTYYDW.jpg" alt="hold aadhar close to your face" width="150" height="150" > -->
+        </div>
+        <br>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-5 col-md-6">
+          <button class="btn fetch_btn" onclick="getLocationn(event)">fetch Location!!</button>
+        </div>
+        <div class="col-5 col-md-6">
+          <button type="submit" class="btn form_btn">Next </button>
+        </div>
+      </div>
+
+  </form>
+
+
+
+  <p id="demo"></p>
+
+
+  <script>
+      var x = document.getElementById("demo");
+      var lat = document.getElementById("id_lattitude");
+      var lon = document.getElementById("id_longitude");
+
+      function getLocationn(e) {
+        e.preventDefault();
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+      }
+
+      function showPosition(position) {
+        lat.value=position.coords.latitude;
+        lon.value=position.coords.longitude;
+      }
+      </script>
+
+</div>
+
+
+{% endblock %}

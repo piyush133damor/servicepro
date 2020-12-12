@@ -1,0 +1,148 @@
+{% extends 'shops/base.html' %}
+
+{% block content %}
+
+<div  class="shop_detail">
+
+    <div class="row ">
+        <div class="col-10 col-md-5 m-auto shop_name" style="color:white"><h1>Service centre/ Repair store name : {{shop.name}}</h1></div>
+        <div class="col-10 col-md-5 m-auto detail_buttons">
+            {% ifequal user.username shop.shop_owner %}
+            <a class="btn fetch_btn d_btn" href="{% url 'shop_remove' pk=shop.pk %}"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Remove Shop</a>
+            <a class="btn edit_btn d_btn" href="{% url 'shop_edit' pk=shop.pk %}"><i class="fa fa-magic" aria-hidden="true"></i>&nbsp; Edit Shop</a>
+            {% endifequal %}
+        </div>
+    </div>
+
+    <div class="row map_container">
+        <div class="col-10 col-md-3 m-auto order-2 order-md-1 Items_list">
+            <h2 class="item_lists">Products that we have service available for</h2>
+            <button type="button" class="btn search__btn m-auto" data-toggle="modal" data-target="#exampleModal">
+                Request Service
+            </button>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Service order</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <form  action="{% url 'order' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="owner-email" value="{{shop.owner_email}}" >
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="owner-name" value="{{shop.shop_owner}}" >
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" name="customer-name" value="{{user.username}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-email" class="col-form-label">Email:</label>
+                                <input type="email" class="form-control" name="customer-email" value="{{user.email}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-phone" class="col-form-label">Phone:</label>
+                                <input type="tel" class="form-control" name="customer-phone" value="{{user.contact}}">
+                            </div>
+                            <div class="form-group">
+                              <label for="order-description" class="col-form-label">Order Description:</label>
+                              <textarea class="form-control" name="order-description"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn search__btn" >Send</button>
+                            </div>
+                        </form>
+                    </div>
+
+                  </div>
+                </div>
+            </div>
+
+
+
+            <ul class="itemss">
+                {% if shop %}
+                {% for item in shop.brand_service_available %}
+                <li class="items_prsnt">{{item}}</li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+        <div class="col-10 col-md-6 order-1 order-md-2 m-auto map_display" id="mapid"></div>
+    </div>
+
+<div class="row">
+    <div class="col-10 col-md-6 mr-auto ml-auto reviews">
+        <h2>Reviews</h2>
+
+        <a class="btn search__btn" href="{% url 'add_review_to_shop' pk=shop.pk %}">Add Review</a>
+
+        <ul class="rview">
+                {% for review in reviews %}
+                <li class="reviews_list">
+                    <div class="review">
+                        <div class="date">{{ review.created_date }}</div>
+                        <strong>{{ review.customer }}</strong>
+                        <p>{{ review.text }}</p>
+                    </div>
+                {% empty %}
+                    <p>No reviews here yet :(</p>
+                </li>
+                {% endfor %}
+
+        </ul>
+    </div>
+</div>
+
+    <script >
+        var lat,long;
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+        }
+
+        function showPosition(position) {
+            lat=position.coords.latitude;
+            long=position.coords.longitude;
+            Load_Map();
+        }
+        function Load_Map(){
+
+            var map = L.map('mapid').setView([lat, long], 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker([lat, long]).addTo(map)
+                .bindPopup('I am in here.<br> Looking for shops.')
+                .openPopup();
+
+
+
+            L.Routing.control({
+                waypoints: [
+                    L.latLng(lat, long),
+                    L.latLng({{shop.lattitude}}, {{shop.longitude}})
+                ],
+                router: L.Routing.mapbox('pk.eyJ1IjoiMTIzNDVyYWdodSIsImEiOiJjazdyNTg5NXAwNnMxM2VxcnU1NTUxOGY5In0.vHTJipTVZXFc4K7YVpwstQ')
+                }).addTo(map);
+
+
+
+        }
+    </script>
+
+
+
+</div>
+
+{% endblock %}

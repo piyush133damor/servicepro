@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ServicePro</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+  crossorigin=""/>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+  <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+  integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+  crossorigin=""></script>
+
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+
+
+  <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+
+  <style>
+      #mapid{height: 80vh;}
+  </style>
+
+</head>
+<body onload="getLocation()">
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-black">
+        <a class="navbar-brand" style="color: white; padding-left: 60px;" href="{% url 'home' %}">ServicePro</a>
+        <a class="navbar-brand" style="color: white;" href="{% url 'home' %}">&nbsp;&nbsp;Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" style="color: white;" href="{% url 'shop_new' %}"><i class="fa fa-plus-square" aria-hidden="true"></i>&nbsp;&nbsp; Add Shop</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" style="color: white;" href="{% url 'myshops' %}"><i class="fa fa-shopping-bag" aria-hidden="true"></i>&nbsp;&nbsp; My Shops</a>
+            </li>
+
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" style="color: white;" href="{% url 'aboutUs' %}"><i class="fas fa-info-circle"></i>&nbsp;&nbsp; AboutUs</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" style="color: white;" href="{% url 'logout' %}"><img src="https://img.icons8.com/ios-glyphs/30/000000/logout-rounded-up--v2.png"/>&nbsp;&nbsp; logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" style="color: white;" href="{% url 'register' %}"><i class="fas fa-lock"></i>&nbsp;&nbsp; Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" style="color: white;" href="{% url 'login' %}"><i class="fas fa-lock"></i>&nbsp;&nbsp; login</a>
+            </li>
+
+            {% endif %}
+
+
+
+          </ul>
+        </div>
+    </nav>
+</header>
+
+{% block content %}
+{% endblock %}
+
+<!-- <footer class="py-5 bg-orange">
+  <div class="footer">
+    <p class="m-0 text-highlight text-white">Copyright © Shop Near You 2020</p>
+    <p class="m-0 text-highlight text-white">All rights Reserved </p>
+    <p class="m-0 text-highlight text-white">Designed by developers at- Shop Near You</p>
+  </div>
+</footer> -->
+</body>
+</html>
