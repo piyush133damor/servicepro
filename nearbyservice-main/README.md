@@ -1,4 +1,4 @@
-# NearByService
+# NearByService: - NearByService is a platfrom where Customer can find certified service centers and services for top electronic brands. Owners can add their services and service centers and customers can find the services and servie centers according to the Items and Brand they need.
 
 
 
